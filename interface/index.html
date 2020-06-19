@@ -20,16 +20,13 @@
 	<!-- Syntax highlighting -->
 	<link rel="stylesheet" href="css/railscasts.css">
 
-	<!-- jQuery -->
-	<script src="js/lib/jquery.min.js"></script>
-	<script src="js/lib/jquery.xmlrpc.min.js"></script>
 	<!-- Gamepad -->
 	<script src="js/lib/gamepad.min.js"></script>
 	<!-- Keyboard -->
 	<script src="js/lib/keyboard.min.js"></script>
 	<!-- UI scripts -->
 	<script src="js/lib/bootstrap.bundle.min.js"></script>
-	<script src="js/lib/bootoast-fa.min.js"></script>
+	
 	<script src="js/lib/Chart.bundle.min.js"></script>
 	<!-- Syntax highlighting -->
 	<script src="js/lib/highlight.pack.js"></script>
@@ -41,6 +38,11 @@
 	<!-- JSON Editor -->
 	<script src="js/lib/jsoneditor.min.js"></script>
 	<script src="js/sights.config.schema.js"></script>
+	<!-- jQuery -->
+	<!--script src="js/lib/cash.min.js"></script-->
+	<script src="js/lib/jquery.min.js"></script>
+	<script src="js/lib/jquery.xmlrpc.min.js"></script>
+	<script src="js/lib/bootoast-fa.min.js"></script>
 	<!-- SIGHTS Scripts -->
 	<script src="js/sights.alert.js"></script>
 	<script src="js/sights.interface.js"></script>
@@ -318,7 +320,7 @@
 							</div>
                             <div class="row">
                                 <div class="col">
-                                    <select id="revision_selector" disabled="disabled" class="custom-select">
+                                    <select id="revision_selector" disabled="disabled" class="form-select">
                                         <option value="none">No revisions available</option>
                                     </select>
                                 </div>
@@ -481,6 +483,7 @@
 
 	<!-- NAVIGATION BAR -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container-fluid">
 		<!-- Left, always display -->
 		<div class="navbar-brand" style="z-index:1">
 			<div class="btn-group" role="group">
@@ -545,7 +548,7 @@
 							<i class='fa fa-fw fa-gamepad'></i>
 						</button>
 					</div>
-					<select class='custom-select btn-border-outside' id='gamepad_select'></select>
+					<select class='form-select btn-border-outside' id='gamepad_select'></select>
 				</div>
 			</div>
 		</div>
@@ -598,13 +601,8 @@
 						</button>
 					</div>
 					<div class="btn-group mr-2" role="group">
-						<span class="btn-group-toggle" data-toggle="buttons">
-							<label class="btn btn-outline-dark" tooltip data-placement="bottom"
-								title="Toggle dark mode">
-								<input type="checkbox" autocomplete="off" id="darkmode_toggle"><i
-									class="fa fa-fw fa-cloud-moon"></i>
-							</label>
-						</span>
+						<input type="checkbox" class="btn-check" id="darkmode_toggle" autocomplete="off">
+						<label class="btn btn-outline-dark" for="darkmode_toggle" title="Toggle dark mode"><i class="fa fa-fw fa-cloud-moon"></i></label>
 					</div>
 				</li>
 				<li class="nav-item dropdown">
@@ -625,6 +623,7 @@
 					</div>
 				</li>
 			</ul>
+		</div>
 		</div>
 	</nav>
 

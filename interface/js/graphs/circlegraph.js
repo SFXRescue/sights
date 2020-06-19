@@ -60,10 +60,11 @@ class CircleGraph extends Graph{
     appendTo(target) {
         super.appendTo(target);
         let id = "#" + this.config.uid + "_circle";
-        // Enable tooltips
-        $(id).tooltip({
+        // Enable tooltips        
+        //new bootstrap.Tooltip(document.getElementById(id), {trigger: "hover"})
+        /*$(id).tooltip({
             trigger: "hover"
-        });
+        });*/
     }
 
     setup(index, data, name) {

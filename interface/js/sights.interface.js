@@ -27,8 +27,8 @@ window.addEventListener("beforeunload", function (event) {
 hljs.initHighlightingOnLoad();
 
 function interfaceLog(level, system, message) {
-	$('#interface_info_pre').append((new Date).toLocaleTimeString() + " " + level.toUpperCase() + " " + system + ": " +
-		message + "\n");
+	$('#interface_info_pre').append(document.createTextNode ((new Date).toLocaleTimeString() + " " + level.toUpperCase() + " " + system + ": " +
+		message + "\n"));
 }
 
 function loadConfigSetting(path, defaultValue) {
@@ -93,24 +93,24 @@ function updateConfigAlerts() {
 	unsavedChanges = false;
 	if(editorBaseConfig == currentConfig && currentConfig == editorSavedConfig) {
 		// There are no changes. Hide all alerts.
-		$(".save-alert").slideUp();
-		$("#config_update_alert").slideUp();
-		$(".restart-service-alert").slideUp();
+		$(".save-alert").hide();
+		$("#config_update_alert").hide();
+		$(".restart-service-alert").hide();
 		$(".editor_reload_button").removeClass("disabled");
 		$("#revision_restore_button").removeClass("disabled");
 	}
 	else if(currentConfig == editorSavedConfig) {
 		// There are saved changes that need a restart.
-		$(".save-alert").slideUp();
-		$("#config_update_alert").slideUp();
-		$(".restart-service-alert").slideDown();
+		$(".save-alert").hide();
+		$("#config_update_alert").hide();
+		$(".restart-service-alert").show();
 		$(".editor_reload_button").addClass("disabled");
 		$("#revision_restore_button").addClass("disabled");
 	}
 	else {
 		// There are unsaved changes.
-		$(".save-alert").slideDown();
-		$(".restart-service-alert").slideUp();
+		$(".save-alert").show();
+		$(".restart-service-alert").hide();
 		unsavedChanges = true;
 	}
 }
@@ -210,7 +210,7 @@ function setSpeedIndicator(speed) {
 	}
 }
 
-$(document).on("ready", function () {
+document.addEventListener("DOMContentLoaded", function(event) { 
 	// Notify the user as soon as they close the settings modal that there are unsaved changes
 	$('#settings_modal').on('hidden.bs.modal', function () {
 		if (unsavedChanges) {
@@ -271,9 +271,14 @@ $(document).on("ready", function () {
 
 
 	// Enable tooltips
-	$('[tooltip]').tooltip({
+	/*$('[tooltip]').tooltip({
 		trigger: "hover"
-	});
+	});*/
+	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'))
+	var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+		return new bootstrap.Tooltip(tooltipTriggerEl)
+	})
+
 
 	// Reload page when header pressed
 	$("#nav_title").on("click", function () {
@@ -297,8 +302,8 @@ $(document).on("ready", function () {
 	});
 
 	// Load no-feed.svg and append to .no-feed divs
-	$('.no-feed').load('images/no-feed.svg');
-	$('.no-feed-sights').load('images/no-feed-sights.svg');
+	//$('.no-feed').load('images/no-feed.svg');
+	//$('.no-feed-sights').load('images/no-feed-sights.svg');
 	// Make the image invisible until it has loaded, allowing us to see the fallback image
 	$('.stream-image').css('opacity', '0');
 	// Once it's loaded, remove transparency
@@ -352,8 +357,10 @@ $(document).on("ready", function () {
 		let selected = $('#revision_selector').val();
 		if (selected != "none") {
 			requestRevision(selected);
-			$("#revision_restore_button").removeClass("disabled");
-			$("#revision_delete_button").removeClass("disabled");
+			//$("#revision_restore_button").removeClass("disabled");
+			//$("#revision_delete_button").removeClass("disabled");
+			document.querySelector("#revision_restore_button").classList.remove("disabled");
+			document.querySelector("#revision_delete_button").classList.remove("disabled");
 		}
 		else {
 			$("#revision_restore_button").addClass("disabled");
@@ -396,7 +403,7 @@ $(document).on("ready", function () {
 	});
 
 	$("#advanced_editor_pre").on("click", function () {
-		$("#config_update_alert").slideDown();
+		$("#config_update_alert").show();
 	});
 
 	// Update the file name in both editors when one is changed

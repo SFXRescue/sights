@@ -46,9 +46,9 @@ class UptimeBox extends Graph{
         }, 1000);
 
         // Enable tooltips
-        $(id).tooltip({
+        /*$(id).tooltip({
             trigger: "hover"
-        });
+        });*/
     }
 
     update(index, data, name) {
