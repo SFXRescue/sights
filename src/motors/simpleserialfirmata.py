@@ -29,19 +29,38 @@
 # +---------+-----------+---+---+---+---+---+---+---------+----------------------------+
 
 from motor_wrapper import MotorWrapper
-import serial
-import logging
+from SerialFirmata import Leonardo, string_to_port
 
 
 class SimpleSerialConnection(MotorWrapper):
     # What type of motor this wrapper handles
-    type_ = 'simpleserial'
+    type_ = 'simpleserialfirmata'
 
     def __init__(self, config, **kwargs):
-        MotorWrapper.__init__(self, config, **kwargs)
-        self.port = config.get('port')
+        MotorWrapper.__init__(self, config)
+        self.firmata = None
+        try:
+            self.logger.info("Initialising Firmata")
+            firmataConf = config['firmata']
+            self.logger.info("Got Firmata conf")
+            self.logger.info(firmataConf)
+            self.firmata = Leonardo(firmataConf['port'], baudrate=firmataConf['baudrate'], timeout=5)
+            self.logger.info("Firmata created")
+        except Exception as error:
+            self.logger.error("No Firmata config found or it could not be connected to")
+            self.logger.error(error)
+
+        if self.firmata is None:
+            raise Exception("no firmata provided")
+
+        self.port = string_to_port(config.get('port'))
         self.baudrate = config.get('baudrate')
-        self.serial = serial.Serial(port=self.port, baudrate=self.baudrate)
+        self.tx = config.get('tx')
+        self.rx = config.get('rx')
+        self.logger.info("Setup Firmata Serial connection to sabertooths")
+        self.logger.info("port: %s baudrate: %d rx: %d tx: %d", self.port, self.baudrate, self.rx, self.tx)
+        self.firmata.serialConfig(self.port, self.baudrate, self.rx, self.tx)
+        self.logger.info("Finish Firmata Serial connection to sabertooths")
         self.channels = config.get('channels')
         try:
             self.channels.get('left')
@@ -49,23 +68,23 @@ class SimpleSerialConnection(MotorWrapper):
         except AttributeError:
             self.channels['left'] = 1
             self.channels['right'] = 0
+        
+        self.logger.info("Finish init")
 
     def move_raw(self, left=None, right=None):
         # Left side
         if left is not None:
-            offset = 64 if left > 0 else 0
-            channel = self.channels.get('left') * 128
-            msg = offset + channel + abs(round(62 / 1000 * left))
-            self.serial.write(bytes([msg]))
+            offset = 64  # if left > 0 else 0
+            msg = offset + (round(62 / 1000 * left))
+            self.firmata.serialWriteRaw(self.port, bytes([msg]))
         # Right side
         if right is not None:
-            offset = 64 if right > 0 else 0
-            channel = self.channels.get('right') * 128
-            msg = offset + channel + abs(round(62 / 1000 * right))
-            self.serial.write(bytes([msg]))
+            offset = 64  # if right > 0 else 0
+            msg = offset + 128 + (round(62 / 1000 * right))
+            self.firmata.serialWriteRaw(self.port, bytes([msg]))
 
     def stop(self):
-        self.serial.write(bytes([0]))
+        self.firmata.serialWriteRaw(self.port, bytes([0]))
 
     def close(self):
-        self.serial.close()
+        pass

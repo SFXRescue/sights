@@ -38,6 +38,7 @@ class Manager:
         self.logger.debug(f"Process ID (PID): {os.getpid()}")
         # Create pipe. sensor_pipe receives, and control_pipe sends
         self.sensor_pipe, self.control_pipe = Pipe(duplex=False)
+
         # Create server and receiver processes
         self.control_process = ControlReceiver(2, self.control_pipe, self.config_file)
         self.sensor_process = SensorStream(1, self.sensor_pipe, self.config_file,
